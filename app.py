@@ -145,9 +145,9 @@ random_colors = ["#ff00ff", "#00ff00", "#ffff00", "#00ffff", "#ff5555", "#bd00ff
 # --- 首次加载弹窗 ---
 if not st.session_state.initial_popup_seen:
     init_options = [
-        "(1) 硅基螺线管代劳中_(:3」∠)_",
-        "(2) This is no Silicon Valley. It's Silicon Kelly here :3",
-        "(3) 你好What's upこんにちﾜｯｻﾌﾟ(^_^)/"
+        "硅基螺线管代劳中_(:3」∠)_",
+        "This is no Silicon Valley. It's Silicon Kelly here :3",
+        "你好What's upこんにちﾜｯｻﾌﾟ(^_^)/"
     ]
     chosen_init = random.choice(init_options)
     border_color = random.choice(random_colors)
@@ -161,7 +161,7 @@ if not st.session_state.initial_popup_seen:
             </div>
             <div class="window-content">
                 <strong>{chosen_init}</strong><br><br>
-                输入点什么开始聊天呀... (⌒▽⌒)
+                输入点什么开始聊天！
             </div>
         </div>
     """, unsafe_allow_html=True)
@@ -195,7 +195,7 @@ if user_input:
     st.session_state.messages.append({"role": "user", "content": user_input})
     
     # 调用 API 生成回复
-    with st.spinner("Kelly正在打字... (并喝了口椰子水 _(:3」∠)_ )"):
+    with st.spinner("螺线管输出中... _(:3」∠)_ )"):
         response = model.generate_content(user_input)
         kelly_reply = response.text
         
