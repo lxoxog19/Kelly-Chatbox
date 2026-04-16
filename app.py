@@ -77,10 +77,10 @@ st.markdown(f"""
     }}
 
     /* 隐藏默认 UI 元素让背景全屏化 */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    [data-testid="stSidebar"] {display: none;}
+    #MainMenu {{visibility: hidden;}}
+    footer {{visibility: hidden;}}
+    header {{visibility: hidden;}}
+    [data-testid="stSidebar"] {{display: none;}}
     </style>
     """, unsafe_allow_html=True)
 
