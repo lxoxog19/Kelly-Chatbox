@@ -137,7 +137,7 @@ Be authentic, playful, code-switch naturally, and engage like a real friend woul
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(model_name="gemini-1.0-pro", system_instruction=PERSONAL_VIBE)
+    model = genai.GenerativeModel(model_name="gemini-2.5-Flash", system_instruction=PERSONAL_VIBE)
 except:
     st.markdown('<div class="window"><div class="window-header"><span>ALERT.EXE</span></div><div class="window-content">🔑 Error: API Key is missing in Secrets!</div></div>', unsafe_allow_html=True)
     st.stop()
