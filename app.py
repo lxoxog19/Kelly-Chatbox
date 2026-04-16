@@ -143,7 +143,7 @@ except:
     st.stop()
 
 # 定义随机颜色配色池
-random_colors = ["#ff00ff", "#00ff00", "#ffff00", "#00ffff", "#ff5555", "#bd00ff"]
+random_colors = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#9400D3"]
 
 # --- 首次加载弹窗 ---
 if not st.session_state.initial_popup_seen:
