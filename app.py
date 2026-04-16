@@ -11,9 +11,10 @@ if "initial_popup_seen" not in st.session_state:
 
 # --- 2. 配置页面与视觉风格 (Verbatim from reference image aesthetics) ---
 st.set_page_config(page_title="螺线管Cyber Room", layout="centered")
-
+# 先定义好随机颜色，这样下面的 CSS 才能用到它
+selected_color = random.choice(["#e697be", "#faf143", "#e3a9eb", "#a9c8eb"])
 # 注入自定义 CSS (Pixel font, 90s OS popups, cyber blue bg)
-st.markdown("""
+st.markdown(f"""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=DotGothic16&display=swap');
 
