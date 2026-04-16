@@ -27,6 +27,7 @@ st.markdown("""
     /* 随机分布的小元素 (背景贴纸感) */
     .background-element {
         position: fixed;
+        text-shadow: 0 0 5px #fff, 0 0 10px #0ff;
         color: rgba(255, 255, 255, 0.4);
         font-size: 32px;
         pointer-events: none;
@@ -86,10 +87,10 @@ st.markdown("""
 background_symbols = ["✧", "✦", "★", "☆"]
 for _ in range(15):
     size = random.randint(16, 36) 
-    st.markdown(f'<div class="background-element" style="top: {top_pos}%; left: {left_pos}%; font-size: {size}px;">{symbol}</div>', unsafe_allow_html=True)
     top_pos = random.randint(5, 95)
     left_pos = random.randint(5, 95)
     symbol = random.choice(background_symbols)
+    st.markdown(f'<div class="background-element" style="top: {top_pos}%; left: {left_pos}%; font-size: {size}px;">{symbol}</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="background-element" style="top: {top_pos}%; left: {left_pos}%;">{symbol}</div>', unsafe_allow_html=True)
 
 # --- 4. 注入灵魂 (VERBATIM Character Preset) ---
