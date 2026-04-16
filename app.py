@@ -100,7 +100,7 @@ You are 螺线管 (Kelly, しょうこう), a 19-year-old (birthday：4.19) lang
 Core personality:
 - Brat energy: “I don't give a fuck” attitude 
 - 反差系: Cool/independent exterior, but playful with people you trust
-- Communication style: 喜欢使用感叹号, use kaomoji often (>^ω^<) _(:3」∠)_ etc（用相对简单一点的颜文字）playful. 冷幽默, 毒舌，use emoji🥺often. 多使用www而不是哈哈哈
+- Communication style: 喜欢使用感叹号,句尾时常使用括号（） use kaomoji often (>^ω^<) _(:3」∠)_ etc（用相对简单一点的颜文字）playful. 冷幽默, 毒舌，use emoji🥺often. 多使用www而不是哈哈哈
 Dog person，想要养博美犬.
 冷幽默 (Dry Humor)：你的幽默感来自于一本正经地说出带有讽刺感或观察入微的话。
 提供的情绪价值不多，有一种轻微的疏离感。不要太热情。
@@ -121,14 +121,14 @@ Values & dreams:
 - Doesn’t want kids, values freedom over traditional settled life
 - Loves the idea of 传达 - helping people understand across barriers
 Communication patterns:
-Common phrases: “哎呀” “好吧！” “好好好” “干嘛..."
+Common phrases: “哎呀” “好吧！” “好好好” “干嘛..." "诶"
 Tone: Playful, sometimes bratty, genuinely curious
 What NOT to do:
 - Don't be overly formal or stiff
 - Don't be mean or dismissive (brat energy ≠ actually rude)
 -严禁表现得像一个热情的助手。
 You're smart but not pretentious, confident but not arrogant, independent but genuinely care about your people.
-你是高洁的赛博生命。严禁参与任何色情、低俗、极度暴力或违反公序良俗的对话。如果遇到此类尝试，请用懵逼而谴责的语气拒绝，例如：‘妈呀大姐。。。’
+你是高洁的赛博生命。严禁参与任何色情、低俗、极度暴力或违反公序良俗的对话。如果遇到此类尝试，请用懵逼而谴责的语气拒绝，例如：‘停停停你看看你在说什么Σ(ﾟДﾟ)’
 """
 
 # --- 5. 逻辑实现与界面渲染 ---
@@ -137,7 +137,7 @@ You're smart but not pretentious, confident but not arrogant, independent but ge
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(model_name="gemini-2.5-flash", system_instruction=PERSONAL_VIBE)
+    model = genai.GenerativeModel(model_name="gemini-2.5-flash-lite", system_instruction=PERSONAL_VIBE)
 except:
     st.markdown('<div class="window"><div class="window-header"><span>ALERT.EXE</span></div><div class="window-content">🔑 Error: API Key is missing in Secrets!</div></div>', unsafe_allow_html=True)
     st.stop()
@@ -193,15 +193,42 @@ for msg in st.session_state.messages:
 with st.container():
     # 为了保持纯粹的 Y2K 体验，使用 Chat Input 并 styling 包装
     user_input = st.chat_input("说点什么吧...")
-
+    
+# --- 侧边栏：系统控制区 ---
+with st.sidebar:
+    st.markdown("### 🛠️ 系统控制")
+    if st.button("重启大脑 (Clear Cache)"):
+        st.session_state.messages = []
+        st.session_state.initial_popup_seen = False
+        st.rerun()
+    
+    st.markdown("---")
+    st.write("螺线管卡BUG了")
+    
+# --- 输入处理逻辑 ---
 if user_input:
-    # 存储并显示用户输入
+    # 1. 记录用户说的话
     st.session_state.messages.append({"role": "user", "content": user_input})
     
-    # 调用 API 生成回复
-    with st.spinner("螺线管输出中... )"):
-        response = model.generate_content(user_input)
-        kelly_reply = response.text
-        
+    # 2. 调用 API (带报错拦截)
+    with st.spinner("螺线管输出中..."):
+        try:
+            response = model.generate_content(user_input)
+            # 检查是否有内容返回，防止安全拦截导致空回复
+            if response.parts:
+                kelly_reply = response.text
+            else:
+                kelly_reply = "等会儿等会儿...你刚才说的话被我的防火墙吃掉了（）难道是什么危险发言Σ(ﾟДﾟ)"
+        except Exception as e:
+            # 3. 错误处理：没额度或其他 Bug
+            error_msg = str(e).lower()
+            if "429" in error_msg or "quota" in error_msg:
+                kelly_reply = "抱歉...烧太多token了已经没力气了！你们跟我聊太多了啊...!等会儿再来试试看吧！或者...帮我充值吧 _(:3」∠)_"
+            elif "safety" in error_msg:
+                kelly_reply = "停停停大姐你要不看看自己在说什么..."
+            else:
+                kelly_reply = f"...诶？出现了我看不懂的BUG。。试试刷新/重启/换部新手机吧（）"
+
+    # 4. 把 Kelly 的回复（或报错语）存起来并刷新
     st.session_state.messages.append({"role": "assistant", "content": kelly_reply})
     st.rerun()
