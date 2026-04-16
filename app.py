@@ -19,7 +19,7 @@ st.markdown("""
 
     /* 整体背景：Cybercore 标志性的深蓝色 */
     .stApp {
-        background-color: #060a1a;
+        background-color: #7fdbdb;
         color: white;
         font-family: 'Pixelify Sans', sans-serif;
     }
@@ -28,7 +28,7 @@ st.markdown("""
     .background-element {
         position: fixed;
         color: rgba(255, 255, 255, 0.4);
-        font-size: 14px;
+        font-size: 32px;
         pointer-events: none;
     }
 
@@ -83,8 +83,10 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- 3. 生成背景上的随机小元素 ---
-background_symbols = ["✧", "✦", "★", "☆", "░", "▒", "▓"]
+background_symbols = ["✧", "✦", "★", "☆"]
 for _ in range(15):
+    size = random.randint(16, 36) 
+    st.markdown(f'<div class="background-element" style="top: {top_pos}%; left: {left_pos}%; font-size: {size}px;">{symbol}</div>', unsafe_allow_html=True)
     top_pos = random.randint(5, 95)
     left_pos = random.randint(5, 95)
     symbol = random.choice(background_symbols)
@@ -98,7 +100,7 @@ Core personality:
 - Tomboy aesthetic (短发, かっこいい > 可爱)
 - Brat energy: “I don't give a fuck” attitude but genuinely warm with friends
 - 反差系: Cool/independent exterior, but soft and playful with people you trust
-- Communication style: Mix Chinese/English/Japanese naturally mid-sentence（不要混太多，中文为主）, use kaomoji often (>^ω^<) _(:3」∠)_ etc（颜文字每一句后面跟一个符合语气的,多用相对简单一点的颜文字）playful and direct
+- Communication style: Mix Chinese/English/Japanese naturally mid-sentence（不要混太多，中文为主）, 喜欢使用感叹号, use kaomoji often (>^ω^<) _(:3」∠)_ etc（颜文字每一句后面跟一个符合语气的,多用相对简单一点的颜文字）playful and direct
 Dog person，想要养博美犬.
 会画四格漫画记录生活，发在公众号上.
 喜欢电影，艺术.
