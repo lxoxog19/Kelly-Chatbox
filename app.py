@@ -19,23 +19,23 @@ st.markdown(f"""
     @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=DotGothic16&display=swap');
 
     /* 整体背景：Cybercore 标志性的深蓝色 */
-    .stApp {
+    .stApp {{
         background-color: #7fdbdb;
         color: white;
         font-family: 'Pixelify Sans', sans-serif;
-    }
+    }}
 
     /* 随机分布的小元素 (背景贴纸感) */
-    .background-element {
+    .background-element {{
         position: fixed;
         text-shadow: 0 0 5px #fff, 0 0 10px #0ff;
         color: rgba(255, 255, 255, 0.4);
         font-size: 32px;
         pointer-events: none;
-    }
+    }}
 
     /* 90s OS Error Popup 风格对话框 */
-    .window {
+    .window {{
         border: 4px solid #dfdfdf;
         border-right: 4px solid #000;
         border-bottom: 4px solid #000;
@@ -43,9 +43,9 @@ st.markdown(f"""
         padding: 2px;
         margin-bottom: 25px;
         box-shadow: 7px 7px 0px 0px rgba(0,0,0,0.8);
-    }
+    }}
 
-    .window-header {
+    .window-header {{
         background: {selected_color} !important;
         color: white;
         padding: 3px 10px;
@@ -55,26 +55,26 @@ st.markdown(f"""
         font-family: 'Pixelify Sans', sans-serif;
         font-size: 15px;
         font-weight: 700;
-    }
+    }}
 
-    .window-content {
+    .window-content {{
         padding: 18px;
         color: black;
         line-height: 1.5;
         font-family: 'DotGothic16', sans-serif; /* 回复文本用日系像素风字体，更有感觉 */
-    }
+    }}
 
     /* 像素输入框与聊天容器 */
-    [data-testid="stChatMessageContainer"] {
+    [data-testid="stChatMessageContainer"] {{
         padding: 0;
-    }
+    }}
 
-    input, textarea {
+    input, textarea {{
         background-color: #fff !important;
         border: 2px solid #7b7b7b !important;
         color: black !important;
         font-family: 'DotGothic16', sans-serif;
-    }
+    }}
 
     /* 隐藏默认 UI 元素让背景全屏化 */
     #MainMenu {visibility: hidden;}
