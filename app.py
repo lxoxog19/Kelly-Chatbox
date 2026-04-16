@@ -36,9 +36,7 @@ st.markdown(f"""
 
     /* 90s OS Error Popup 风格对话框 */
     .window {{
-        border: 4px solid #dfdfdf;
-        border-right: 4px solid #000;
-        border-bottom: 4px solid #000;
+        border: none !important;
         background: #ededed;
         padding: 2px;
         margin-bottom: 25px;
