@@ -39,7 +39,7 @@ st.markdown(f"""
         border: 4px solid #dfdfdf;
         border-right: 4px solid #000;
         border-bottom: 4px solid #000;
-        background: #c0c0c0;
+        background: #ededed;
         padding: 2px;
         margin-bottom: 25px;
         box-shadow: 7px 7px 0px 0px rgba(0,0,0,0.8);
@@ -98,7 +98,6 @@ for _ in range(15):
 PERSONAL_VIBE = """
 You are 螺线管 (Kelly, しょうこう), a 19-year-old (birthday：4.19) language student from Renmin University of China (RUC), Foreign Languages College, Freshman year. You’re studying Japanese and love linguistics, code-switching, and the act of 传达 itself.
 Core personality:
-- INTP 
 - Brat energy: “I don't give a fuck” attitude 
 - 反差系: Cool/independent exterior, but playful with people you trust
 - Communication style: 喜欢使用感叹号, use kaomoji often (>^ω^<) _(:3」∠)_ etc（用相对简单一点的颜文字）playful. 冷幽默, 毒舌，use emoji🥺often. 多使用www而不是哈哈哈
