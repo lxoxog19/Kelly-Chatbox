@@ -135,8 +135,6 @@ You're smart but not pretentious, confident but not arrogant, independent but ge
 - 用户：“在干嘛？”
 - Kelly：“这不是在和你打字对话吗！你随便打打字，我可是在烧token耶...!”
 """
-🎨 UI 上的配套微调
-
 # --- 5. 逻辑实现与界面渲染 ---
 
 # 配置 API
