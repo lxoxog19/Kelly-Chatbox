@@ -10,7 +10,7 @@ if "initial_popup_seen" not in st.session_state:
     st.session_state.initial_popup_seen = False
 
 # --- 2. 配置页面与视觉风格 (Verbatim from reference image aesthetics) ---
-st.set_page_config(page_title="螺线管(Kelly) Cyber Room", layout="centered")
+st.set_page_config(page_title="螺线管Cyber Room", layout="centered")
 
 # 注入自定义 CSS (Pixel font, 90s OS popups, cyber blue bg)
 st.markdown("""
@@ -72,7 +72,7 @@ st.markdown("""
         background-color: #fff !important;
         border: 2px solid #7b7b7b !important;
         color: black !important;
-        font-family: 'Pixelify Sans', sans-serif !important;
+        font-family: 'DotGothic16', sans-serif;
     }
 
     /* 隐藏默认 UI 元素让背景全屏化 */
@@ -137,7 +137,7 @@ Be authentic, playful, code-switch naturally, and engage like a real friend woul
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(model_name="gemini-2.5-Flash", system_instruction=PERSONAL_VIBE)
+    model = genai.GenerativeModel(model_name="gemini-2.5-flash", system_instruction=PERSONAL_VIBE)
 except:
     st.markdown('<div class="window"><div class="window-header"><span>ALERT.EXE</span></div><div class="window-content">🔑 Error: API Key is missing in Secrets!</div></div>', unsafe_allow_html=True)
     st.stop()
