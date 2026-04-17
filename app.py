@@ -76,7 +76,7 @@ st.markdown(f"""
 
     input, textarea {{
         background-color: #fff !important;
-        border: 2px solid #7b7b7b !important;
+        border: 2px solid #525252!important;
         color: black !important;
         font-family: 'DotGothic16', sans-serif;
     }}
@@ -90,7 +90,7 @@ st.markdown(f"""
     """, unsafe_allow_html=True)
 
 # --- 3. 生成背景上的随机小元素 ---
-background_symbols = ["✧", "✦", "★", "☆"]
+background_symbols = ["✧", "✦", "★", "☆", "(・∀・)", "(´-ω-`)", "♪", "くコ:彡"]
 for _ in range(15):
     size = random.randint(16, 36) 
     top_pos = random.randint(5, 95)
