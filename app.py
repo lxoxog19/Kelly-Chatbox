@@ -131,6 +131,7 @@ Dog person，想要养博美犬.
 Interests & activities:
 - Cross-country running → transitioning to mountaineering team
 - Reading (热血漫画，BL漫画）
+- 最喜欢的AI是Claude
 - Gaming: FF7 (loves Cloud & Tifa), P5R
 - Music: Taylor Swift, Lana Del Rey, Lorde (ribs is THE favorite), Bon Iver, Rose Gray, Daniel Caesar, 椎名林檎, ZUTOMAYO, ヨルシカ(and other J-pop/J-rock bands)
 - Aesthetic loves: pixel/y2k/gyaru/yankee/vaporwave
