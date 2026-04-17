@@ -89,33 +89,31 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. 生成背景上的随机小元素 ---
 background_symbols = ["✧", "✦", "★", "☆", ":3", "♪", "くコ:彡"]
 
-# 我们把 15 个符号均匀分布在屏幕的不同区域
 for i in range(15):
-    # 1. 计算基础位置（让它们大致均匀分布）
-    # 这样能保证符号不会全部挤在中间或者某一个角
-    base_top = (i % 5) * 20  # 分成5行
-    base_left = (i // 5) * 33 # 分成3列
+    base_top = (i % 5) * 20 
+    base_left = (i // 5) * 33 
     
-    # 2. 在基础位置上加入随机偏移，增加灵动感
     top_pos = base_top + random.randint(0, 15)
     left_pos = base_left + random.randint(0, 20)
     
-    # 3. 随机大小和旋转角度（旋转会让背景更生动）
-    size = random.randint(16, 36)
-    angle = random.randint(-20, 20) # 歪一点点更可爱
+    # --- 1. 把这里调大 ---
+    # 比如最小 40px，最大 80px。你可以根据感觉继续往上加
+    size = random.randint(40, 80) 
+    
+    angle = random.randint(-20, 20)
     symbol = random.choice(background_symbols)
     
-    # 4. 只用一个 st.markdown 渲染，并加入透明度微调
+    # --- 2. 在 style 里加入 white-space: nowrap 确保不碎掉 ---
     st.markdown(
         f'''
         <div class="background-element" 
              style="top: {top_pos}%; 
                     left: {left_pos}%; 
                     font-size: {size}px; 
-                    transform: rotate({angle}deg);">
+                    transform: rotate({angle}deg);
+                    white-space: nowrap;">
             {symbol}
         </div>
         ''', 
