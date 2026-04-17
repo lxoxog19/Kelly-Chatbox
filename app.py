@@ -47,7 +47,7 @@ st.markdown(f"""
         background: #ededed;
         padding: 2px;
         margin-bottom: 25px;
-        box-shadow: 7px 7px 0px 0px rgba(0,0,0,0.8);
+        box-shadow: 3px 3px 0px 0px rgba(0,0,0,0.8);
     }}
 
     .window-header {{
