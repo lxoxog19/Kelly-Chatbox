@@ -100,7 +100,7 @@ for i in range(15):
     
     # --- 1. 把这里调大 ---
     # 比如最小 40px，最大 80px。你可以根据感觉继续往上加
-    size = random.randint(40, 80) 
+    size = random.randint(20, 45) 
     
     angle = random.randint(-20, 20)
     symbol = random.choice(background_symbols)
