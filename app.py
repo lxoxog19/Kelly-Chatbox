@@ -19,7 +19,7 @@ if "initial_popup_seen" not in st.session_state:
 # --- 2. 配置页面与视觉风格 (Verbatim from reference image aesthetics) ---
 st.set_page_config(page_title="螺线管Cyber Room", layout="centered")
 # 先定义好随机颜色，这样下面的 CSS 才能用到它
-selected_color = random.choice(["#e697be", "#faf143", "#e3a9eb", "#a9c8eb"])
+selected_color = random.choice(["#e697be", "#faf143", "#d7abeb", "#a9c8eb"])
 # 注入自定义 CSS (Pixel font, 90s OS popups, cyber blue bg)
 st.markdown(f"""
     <style>
@@ -100,7 +100,7 @@ for i in range(15):
     
     # --- 1. 把这里调大 ---
     # 比如最小 40px，最大 80px。你可以根据感觉继续往上加
-    size = random.randint(20, 45) 
+    size = random.randint(25, 55) 
     
     angle = random.randint(-20, 20)
     symbol = random.choice(background_symbols)
