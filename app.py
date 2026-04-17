@@ -161,9 +161,61 @@ for i in range(15):
     </div>
     """
 
-# 一次性渲染 CSS 和背景，告别卡顿！
-st.markdown(html_payload, unsafe_allow_html=True)
+# 1. 先把 CSS 样式注入进去（这一段里不要放 div 标签）
+st.markdown(f"""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=DotGothic16&display=swap');
+    .stApp {{ background-color: #7fdbdb; color: white; font-family: 'Pixelify Sans', sans-serif; }}
+    .background-element {{
+        position: fixed;
+        text-shadow: 0 0 5px #fff, 0 0 10px #0ff;
+        color: rgba(255, 255, 255, 0.4);
+        pointer-events: none;
+        z-index: -1;
+    }}
+    .window {{
+        border: none !important;
+        background: #ededed;
+        padding: 2px;
+        margin-bottom: 25px;
+        box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.8); /* 调近了 */
+    }}
+    .window-header {{
+        background: {selected_color} !important;
+        color: white;
+        padding: 3px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Pixelify Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+    }}
+    .window-content {{ padding: 18px; color: black; line-height: 1.5; font-family: 'DotGothic16', sans-serif; }}
+    [data-testid="stChatMessageContainer"] {{ padding: 0; }}
+    input, textarea {{ background-color: #fff !important; border: 2px solid #525252!important; color: black !important; }}
+    .stChatInput textarea::placeholder {{ color: #333333 !important; opacity: 1 !important; }}
+    #MainMenu, footer, header {{visibility: hidden;}}
+    [data-testid="stSidebar"] {{display: none;}}
+</style>
+""", unsafe_allow_html=True)
 
+# 2. 准备背景贴纸的 HTML（这次只放 div）
+all_stickers_html = ""
+background_symbols = ["✧", "✦", "★", "☆", ":3", "♪", "くコ:彡", "T_T"]
+for i in range(15):
+    base_top = (i % 5) * 20 
+    base_left = (i // 5) * 33 
+    top_pos = base_top + random.randint(0, 15)
+    left_pos = base_left + random.randint(0, 20)
+    size = random.randint(20, 45) 
+    angle = random.randint(-20, 20)
+    symbol = random.choice(background_symbols)
+    
+    all_stickers_html += f'<div class="background-element" style="top: {top_pos}%; left: {left_pos}%; font-size: {size}px; transform: rotate({angle}deg); white-space: nowrap;">{symbol}</div>'
+
+# 3. 单独用一个 markdown 渲染所有贴纸
+st.markdown(all_stickers_html, unsafe_allow_html=True)
 
 # --- 5. 动态内容渲染 ---
 
