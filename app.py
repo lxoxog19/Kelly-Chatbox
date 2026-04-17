@@ -89,7 +89,7 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
-background_symbols = ["✧", "✦", "★", "☆", ":3", "♪", "くコ:彡"]
+background_symbols = ["✧", "✦", "★", "☆", ":3", "♪", "くコ:彡", "T_T"]
 
 for i in range(15):
     base_top = (i % 5) * 20 
