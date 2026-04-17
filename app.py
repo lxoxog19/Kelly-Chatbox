@@ -35,7 +35,7 @@ st.markdown(f"""
     /* 随机分布的小元素 (背景贴纸感) */
     .background-element {{
         position: fixed;
-        text-shadow: 1px 1px 5px #fff, 0 0 10px #0ff;
+        text-shadow: 0 0 5px #fff, 0 0 10px #0ff;
         color: rgba(255, 255, 255, 0.4);
         font-size: 32px;
         pointer-events: none;
