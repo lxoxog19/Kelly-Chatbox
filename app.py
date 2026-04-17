@@ -72,113 +72,31 @@ You're smart but not pretentious, confident but not arrogant, independent but ge
 random_colors = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#9400D3"]
 header_colors = ["#e697be", "#faf143", "#d7abeb", "#a9c8eb"]
 
-# --- 4. 前端渲染加速：合并所有 CSS 和静态背景 HTML ---
-# 将 CSS 和 15 个背景元素拼成一个大长条字符串，一次性发给浏览器，极大提升加载速度
+# --- 4. 前端渲染加速：分段注入样式与背景 ---
+
+# 第一段：注入 CSS 样式
 selected_color = random.choice(header_colors)
-
-html_payload = f"""
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=DotGothic16&display=swap');
-
-    .stApp {{
-        background-color: #7fdbdb;
-        color: white;
-        font-family: 'Pixelify Sans', sans-serif;
-    }}
-
-    .background-element {{
-        position: fixed;
-        text-shadow: 0 0 5px #fff, 0 0 10px #0ff;
-        color: rgba(255, 255, 255, 0.4);
-        pointer-events: none;
-        z-index: -1;
-    }}
-
-    .window {{
-        border: none !important;
-        background: #ededed;
-        padding: 2px;
-        margin-bottom: 25px;
-        box-shadow: 7px 7px 0px 0px rgba(0,0,0,0.8);
-    }}
-
-    .window-header {{
-        background: {selected_color} !important;
-        color: white;
-        padding: 3px 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-family: 'Pixelify Sans', sans-serif;
-        font-size: 15px;
-        font-weight: 700;
-    }}
-
-    .window-content {{
-        padding: 18px;
-        color: black;
-        line-height: 1.5;
-        font-family: 'DotGothic16', sans-serif;
-    }}
-
-    [data-testid="stChatMessageContainer"] {{ padding: 0; }}
-    input, textarea {{
-        background-color: #fff !important;
-        border: 2px solid #525252!important;
-        color: black !important;
-        font-family: 'DotGothic16', sans-serif;
-    }}
-    
-    /* 强行改变占位符颜色，防止透明度过低 */
-    .stChatInput textarea::placeholder {{
-        color: #333333 !important;
-        opacity: 1 !important;
-    }}
-
-    #MainMenu {{visibility: hidden;}}
-    footer {{visibility: hidden;}}
-    header {{visibility: hidden;}}
-    [data-testid="stSidebar"] {{display: none;}}
-</style>
-"""
-
-# 在后台生成背景 HTML 片段，拼接到总 Payload 中
-background_symbols = ["✧", "✦", "★", "☆", ":3", "♪", "くコ:彡", "T_T"]
-for i in range(15):
-    base_top = (i % 5) * 20 
-    base_left = (i // 5) * 33 
-    top_pos = base_top + random.randint(0, 15)
-    left_pos = base_left + random.randint(0, 20)
-    size = random.randint(20, 45) 
-    angle = random.randint(-20, 20)
-    symbol = random.choice(background_symbols)
-    
-    html_payload += f"""
-    <div class="background-element" 
-         style="top: {top_pos}%; left: {left_pos}%; font-size: {size}px; 
-                transform: rotate({angle}deg); white-space: nowrap;">
-        {symbol}
-    </div>
-    """
-
-# 1. 先把 CSS 样式注入进去（这一段里不要放 div 标签）
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=DotGothic16&display=swap');
     .stApp {{ background-color: #7fdbdb; color: white; font-family: 'Pixelify Sans', sans-serif; }}
+    
+    /* 核心：确保贴纸层级在最下面且可见 */
     .background-element {{
         position: fixed;
-        text-shadow: 0 0 5px #fff, 0 0 10px #0ff;
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
         color: rgba(255, 255, 255, 0.4);
         pointer-events: none;
-        z-index: -1;
+        z-index: -1; /* 确保在对话框后面 */
+        display: block !important;
     }}
+    
     .window {{
         border: none !important;
         background: #ededed;
         padding: 2px;
         margin-bottom: 25px;
-        box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.8); /* 调近了 */
+        box-shadow: 3px 3px 0px 0px rgba(0,0,0,0.8);
     }}
     .window-header {{
         background: {selected_color} !important;
@@ -200,23 +118,24 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
-# 2. 准备背景贴纸的 HTML（这次只放 div）
+# 第二段：批量生成贴纸 HTML (这里改用简单的格式化，防止 f-string 报错)
 all_stickers_html = ""
 background_symbols = ["✧", "✦", "★", "☆", ":3", "♪", "くコ:彡", "T_T"]
+
 for i in range(15):
-    base_top = (i % 5) * 20 
-    base_left = (i // 5) * 33 
-    top_pos = base_top + random.randint(0, 15)
-    left_pos = base_left + random.randint(0, 20)
-    size = random.randint(20, 45) 
-    angle = random.randint(-20, 20)
-    symbol = random.choice(background_symbols)
+    # 分布逻辑
+    t_pos = (i % 5) * 20 + random.randint(0, 15)
+    l_pos = (i // 5) * 33 + random.randint(0, 20)
+    f_size = random.randint(30, 60) # 稍微调大一点点
+    rot = random.randint(-20, 20)
+    sym = random.choice(background_symbols)
     
-    all_stickers_html += f'<div class="background-element" style="top: {top_pos}%; left: {left_pos}%; font-size: {size}px; transform: rotate({angle}deg); white-space: nowrap;">{symbol}</div>'
+    # 使用 % 格式化或者简单的字符串拼接，避开嵌套大括号的坑
+    sticker = f'<div class="background-element" style="top:{t_pos}%; left:{l_pos}%; font-size:{f_size}px; transform:rotate({rot}deg); white-space:nowrap;">{sym}</div>'
+    all_stickers_html += sticker
 
-# 3. 单独用一个 markdown 渲染所有贴纸
+# 第三段：一次性渲染
 st.markdown(all_stickers_html, unsafe_allow_html=True)
-
 # --- 5. 动态内容渲染 ---
 
 # 首次加载弹窗
