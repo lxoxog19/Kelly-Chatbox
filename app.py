@@ -203,6 +203,6 @@ if user_input:
             elif "balance" in error_msg or "insufficient" in error_msg:
                 kelly_reply = "啊...说太多话了没token烧了(;・∀・)。。可以麻烦你去告诉碳基的我给我充钱吗...? 或者你想给我捐款也可以()"
             else:
-                kelly_reply = f"...诶。发生了某种不可名状的错误。（我也看不懂(;・∀・)。。
+                kelly_reply = f"...诶。发生了某种不可名状的错误。（我也看不懂(;・∀・)。。"
     st.session_state.messages.append({"role": "assistant", "content": kelly_reply})
     st.rerun()
