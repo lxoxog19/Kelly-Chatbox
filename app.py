@@ -90,7 +90,7 @@ st.markdown(f"""
     """, unsafe_allow_html=True)
 
 # --- 3. 生成背景上的随机小元素 ---
-background_symbols = ["✧", "✦", "★", "☆", "(・∀・)", "(´-ω-`)", "♪", "くコ:彡"]
+background_symbols = ["✧", "✦", "★", "☆", ":3", "♪", "くコ:彡"]
 for _ in range(15):
     size = random.randint(16, 36) 
     top_pos = random.randint(5, 95)
