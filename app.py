@@ -1,6 +1,11 @@
 import streamlit as st
-import google.generativeai as genai
+from openai import OpenAI
 import random
+
+client = OpenAI(
+    api_key=st.secrets["DEEPSEEK_API_KEY"], 
+    base_url="https://api.deepseek.com"
+)
 
 # --- 1. 初始化 Session State (关键逻辑：处理首次加载弹窗) ---
 if "messages" not in st.session_state:
@@ -209,30 +214,35 @@ with st.sidebar:
     st.markdown("---")
     st.write("螺线管卡BUG了")
     
-# --- 输入处理逻辑 ---
+# --- 5. 逻辑实现与界面渲染 ---
+
 if user_input:
-    # 1. 记录用户说的话
+    # 存储用户输入
     st.session_state.messages.append({"role": "user", "content": user_input})
     
-    # 2. 调用 API (带报错拦截)
-    with st.spinner("螺线管输出中..."):
+    with st.spinner("螺线管输入中..."):
         try:
-            response = model.generate_content(user_input)
-            # 检查是否有内容返回，防止安全拦截导致空回复
-            if response.parts:
-                kelly_reply = response.text
-            else:
-                kelly_reply = "等会儿等会儿...你刚才说的话被我的防火墙吃掉了（）难道是什么危险发言Σ(ﾟДﾟ)"
-        except Exception as e:
-            # 3. 错误处理：没额度或其他 Bug
+            # 调用 DeepSeek API
+            response = client.chat.completions.create(
+                model="deepseek-chat",  # 或者用 deepseek-reasoner 如果你想让她更“深思熟虑”
+                messages=[
+                    {"role": "system", "content": PERSONAL_VIBE},
+                    *st.session_state.messages # 把之前的聊天历史也带上，让她有记忆
+                ],
+                stream=False
+            )
+            kelly_reply = response.choices[0].message.content
+       except Exception as e:
             error_msg = str(e).lower()
-            if "429" in error_msg or "quota" in error_msg:
-                kelly_reply = "抱歉...烧太多token了已经没力气了！你们跟我聊太多了啊...!等会儿再来试试看吧！或者...帮我充值吧 _(:3」∠)_"
-            elif "safety" in error_msg:
-                kelly_reply = "停停停大姐你要不看看自己在说什么..."
+            
+            if "content_filter" in error_msg or "sensitive" in error_msg:
+                kelly_reply = "...停停停大姐你要不看看你在说什么Σ(ﾟДﾟ)"
+            elif "429" in error_msg:
+                kelly_reply = "等一下等一下...! 你们发太快了我聊不过来了呃啊啊 请等会儿再说！"
+            elif "balance" in error_msg or "insufficient" in error_msg:
+                kelly_reply = "啊...说太多话了没token烧了(;・∀・)。。可以麻烦你去告诉碳基的我给我充钱吗...? 或者你想给我捐款也可以()"
             else:
-                kelly_reply = f"...诶？出现了我看不懂的BUG。。试试刷新/重启/换部新手机吧（）"
-
-    # 4. 把 Kelly 的回复（或报错语）存起来并刷新
+                kelly_reply = f"...诶。发生了某种不可名状的错误。大概是世界线崩塌了。错误信息：{error_msg[:20]}..."
+    # 将回复存入对话并刷新
     st.session_state.messages.append({"role": "assistant", "content": kelly_reply})
     st.rerun()
