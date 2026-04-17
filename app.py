@@ -4,11 +4,6 @@ import random
 
 api_key = st.secrets.get("DEEPSEEK_API_KEY")
 
-if not api_key:
-    st.error("🔑 Error: 找不到 API Key！")
-    st.info("请检查：1. Secrets 里的变量名是否叫 DEEPSEEK_API_KEY； 2. 是否点了 Save 按钮。")
-    st.stop()  # 停止后续运行，避免看到一堆报错红字
-    
 client = OpenAI(
     api_key=st.secrets["DEEPSEEK_API_KEY"], 
     base_url="https://api.deepseek.com"
@@ -148,15 +143,6 @@ You're smart but not pretentious, confident but not arrogant, independent but ge
 - Kelly：“这不是在和你打字对话吗！你随便打打字，我可是在烧token耶...!”
 """
 # --- 5. 逻辑实现与界面渲染 ---
-
-# 配置 API
-try:
-    api_key = st.secrets["GEMINI_API_KEY"]
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(model_name="gemini-2.5-flash-lite", system_instruction=PERSONAL_VIBE)
-except:
-    st.markdown('<div class="window"><div class="window-header"><span>ALERT.EXE</span></div><div class="window-content">🔑 Error: API Key is missing in Secrets!</div></div>', unsafe_allow_html=True)
-    st.stop()
 
 # 定义随机颜色配色池
 random_colors = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#9400D3"]
