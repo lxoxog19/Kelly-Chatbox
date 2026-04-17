@@ -232,7 +232,7 @@ if user_input:
                 stream=False
             )
             kelly_reply = response.choices[0].message.content
-       except Exception as e:
+        except Exception as e:
             error_msg = str(e).lower()
             
             if "content_filter" in error_msg or "sensitive" in error_msg:
