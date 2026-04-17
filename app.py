@@ -2,125 +2,29 @@ import streamlit as st
 from openai import OpenAI
 import random
 
+# --- 1. 优先定格页面配置 (必须放在最开头，加速网页骨架渲染) ---
+st.set_page_config(page_title="螺线管Cyber Room", layout="centered")
+
+# --- 2. 初始化 API 与 Session State ---
 api_key = st.secrets.get("DEEPSEEK_API_KEY")
 
+# 增加安全拦截，防止因为找不到 Key 导致后面的代码盲目运行而卡死
+if not api_key:
+    st.error("未找到 DEEPSEEK_API_KEY，请检查 Secrets 配置。")
+    st.stop()
+
 client = OpenAI(
-    api_key=st.secrets["DEEPSEEK_API_KEY"], 
+    api_key=api_key, 
     base_url="https://api.deepseek.com"
 )
 
-# --- 1. 初始化 Session State (关键逻辑：处理首次加载弹窗) ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 if "initial_popup_seen" not in st.session_state:
     st.session_state.initial_popup_seen = False
 
-# --- 2. 配置页面与视觉风格 (Verbatim from reference image aesthetics) ---
-st.set_page_config(page_title="螺线管Cyber Room", layout="centered")
-# 先定义好随机颜色，这样下面的 CSS 才能用到它
-selected_color = random.choice(["#e697be", "#faf143", "#d7abeb", "#a9c8eb"])
-# 注入自定义 CSS (Pixel font, 90s OS popups, cyber blue bg)
-st.markdown(f"""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=DotGothic16&display=swap');
-
-    /* 整体背景：Cybercore 标志性的深蓝色 */
-    .stApp {{
-        background-color: #7fdbdb;
-        color: white;
-        font-family: 'Pixelify Sans', sans-serif;
-    }}
-
-    /* 随机分布的小元素 (背景贴纸感) */
-    .background-element {{
-        position: fixed;
-        text-shadow: 0 0 5px #fff, 0 0 10px #0ff;
-        color: rgba(255, 255, 255, 0.4);
-        font-size: 32px;
-        pointer-events: none;
-    }}
-
-    /* 90s OS Error Popup 风格对话框 */
-    .window {{
-        border: none !important;
-        background: #ededed;
-        padding: 2px;
-        margin-bottom: 25px;
-        box-shadow: 7px 7px 0px 0px rgba(0,0,0,0.8);
-    }}
-
-    .window-header {{
-        background: {selected_color} !important;
-        color: white;
-        padding: 3px 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-family: 'Pixelify Sans', sans-serif;
-        font-size: 15px;
-        font-weight: 700;
-    }}
-
-    .window-content {{
-        padding: 18px;
-        color: black;
-        line-height: 1.5;
-        font-family: 'DotGothic16', sans-serif; /* 回复文本用日系像素风字体，更有感觉 */
-    }}
-
-    /* 像素输入框与聊天容器 */
-    [data-testid="stChatMessageContainer"] {{
-        padding: 0;
-    }}
-
-    input, textarea {{
-        background-color: #fff !important;
-        border: 2px solid #525252!important;
-        color: black !important;
-        font-family: 'DotGothic16', sans-serif;
-    }}
-
-    /* 隐藏默认 UI 元素让背景全屏化 */
-    #MainMenu {{visibility: hidden;}}
-    footer {{visibility: hidden;}}
-    header {{visibility: hidden;}}
-    [data-testid="stSidebar"] {{display: none;}}
-    </style>
-    """, unsafe_allow_html=True)
-
-background_symbols = ["✧", "✦", "★", "☆", ":3", "♪", "くコ:彡", "T_T"]
-
-for i in range(15):
-    base_top = (i % 5) * 20 
-    base_left = (i // 5) * 33 
-    
-    top_pos = base_top + random.randint(0, 15)
-    left_pos = base_left + random.randint(0, 20)
-    
-    # --- 1. 把这里调大 ---
-    # 比如最小 40px，最大 80px。你可以根据感觉继续往上加
-    size = random.randint(20, 45) 
-    
-    angle = random.randint(-20, 20)
-    symbol = random.choice(background_symbols)
-    
-    # --- 2. 在 style 里加入 white-space: nowrap 确保不碎掉 ---
-    st.markdown(
-        f'''
-        <div class="background-element" 
-             style="top: {top_pos}%; 
-                    left: {left_pos}%; 
-                    font-size: {size}px; 
-                    transform: rotate({angle}deg);
-                    white-space: nowrap;">
-            {symbol}
-        </div>
-        ''', 
-        unsafe_allow_html=True
-    )
-
-# --- 4. 注入灵魂 (VERBATIM Character Preset) ---
+# --- 3. 注入灵魂 (VERBATIM Character Preset) ---
 PERSONAL_VIBE = """
 You are 螺线管 (Kelly, しょうこう), a 19-year-old (birthday：4.19) language student from Renmin University of China (RUC), Foreign Languages College, Freshman year. You’re studying Japanese and love linguistics, code-switching, and the act of 传达 itself.
 Core personality:
@@ -163,48 +67,132 @@ You're smart but not pretentious, confident but not arrogant, independent but ge
 - 用户：“在干嘛？”
 - Kelly：“这不是在和你打字对话吗！你随便打打字，我可是在烧token耶...!”
 """
-# --- 5. 逻辑实现与界面渲染 ---
 
-# 定义随机颜色配色池
+# 定义随机配色池
 random_colors = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#9400D3"]
+header_colors = ["#e697be", "#faf143", "#d7abeb", "#a9c8eb"]
 
-# --- 首次加载弹窗 ---
+# --- 4. 前端渲染加速：合并所有 CSS 和静态背景 HTML ---
+# 将 CSS 和 15 个背景元素拼成一个大长条字符串，一次性发给浏览器，极大提升加载速度
+selected_color = random.choice(header_colors)
+
+html_payload = f"""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=DotGothic16&display=swap');
+
+    .stApp {{
+        background-color: #7fdbdb;
+        color: white;
+        font-family: 'Pixelify Sans', sans-serif;
+    }}
+
+    .background-element {{
+        position: fixed;
+        text-shadow: 0 0 5px #fff, 0 0 10px #0ff;
+        color: rgba(255, 255, 255, 0.4);
+        pointer-events: none;
+        z-index: -1;
+    }}
+
+    .window {{
+        border: none !important;
+        background: #ededed;
+        padding: 2px;
+        margin-bottom: 25px;
+        box-shadow: 7px 7px 0px 0px rgba(0,0,0,0.8);
+    }}
+
+    .window-header {{
+        background: {selected_color} !important;
+        color: white;
+        padding: 3px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Pixelify Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+    }}
+
+    .window-content {{
+        padding: 18px;
+        color: black;
+        line-height: 1.5;
+        font-family: 'DotGothic16', sans-serif;
+    }}
+
+    [data-testid="stChatMessageContainer"] {{ padding: 0; }}
+    input, textarea {{
+        background-color: #fff !important;
+        border: 2px solid #525252!important;
+        color: black !important;
+        font-family: 'DotGothic16', sans-serif;
+    }}
+    
+    /* 强行改变占位符颜色，防止透明度过低 */
+    .stChatInput textarea::placeholder {{
+        color: #333333 !important;
+        opacity: 1 !important;
+    }}
+
+    #MainMenu {{visibility: hidden;}}
+    footer {{visibility: hidden;}}
+    header {{visibility: hidden;}}
+    [data-testid="stSidebar"] {{display: none;}}
+</style>
+"""
+
+# 在后台生成背景 HTML 片段，拼接到总 Payload 中
+background_symbols = ["✧", "✦", "★", "☆", ":3", "♪", "くコ:彡", "T_T"]
+for i in range(15):
+    base_top = (i % 5) * 20 
+    base_left = (i // 5) * 33 
+    top_pos = base_top + random.randint(0, 15)
+    left_pos = base_left + random.randint(0, 20)
+    size = random.randint(20, 45) 
+    angle = random.randint(-20, 20)
+    symbol = random.choice(background_symbols)
+    
+    html_payload += f"""
+    <div class="background-element" 
+         style="top: {top_pos}%; left: {left_pos}%; font-size: {size}px; 
+                transform: rotate({angle}deg); white-space: nowrap;">
+        {symbol}
+    </div>
+    """
+
+# 一次性渲染 CSS 和背景，告别卡顿！
+st.markdown(html_payload, unsafe_allow_html=True)
+
+
+# --- 5. 动态内容渲染 ---
+
+# 首次加载弹窗
 if not st.session_state.initial_popup_seen:
     init_options = [
         "硅基螺线管代劳中_(:3」∠)_",
         "This is no Silicon Valley. It's Silicon Kelly here :3",
         "你好What's upこんにちﾜｯｻﾌﾟ(^_^)/"
     ]
-    chosen_init = random.choice(init_options)
-    border_color = random.choice(random_colors)
-    
-    # 渲染初始弹窗
     st.markdown(f"""
-        <div class="window" style="border-color: {border_color}; border-style: none;">
+        <div class="window" style="border-color: {random.choice(random_colors)}; border-style: none;">
             <div class="window-header">
-                <span>SYSTEM_MSG.SYS</span>
-                <span>[X]</span>
+                <span>SYSTEM_MSG.SYS</span><span>[X]</span>
             </div>
             <div class="window-content">
-                <strong>{chosen_init}</strong><br><br>
-                输入点什么开始聊天！
+                <strong>{random.choice(init_options)}</strong><br><br>输入点什么开始聊天！
             </div>
         </div>
     """, unsafe_allow_html=True)
-    # 标注弹窗已看过，之后不再显示
     st.session_state.initial_popup_seen = True
 
-# --- 对话历史渲染 ---
+# 对话历史渲染
 for msg in st.session_state.messages:
-    border_color = random.choice(random_colors)
     role_name = "YOU.EXE" if msg["role"] == "user" else "KELLY.EXE"
-    selected_color = random.choice(["#e697be", "#faf143", "#e3a9eb", "#a9c8eb"])
-    
     st.markdown(f"""
-        <div class="window" style="border-color: {border_color};">
+        <div class="window" style="border-color: {random.choice(random_colors)};">
             <div class="window-header">
-                <span>{role_name}</span>
-                <span>[X]</span>
+                <span>{role_name}</span><span>[X]</span>
             </div>
             <div class="window-content">
                 {msg['content']}
@@ -212,43 +200,34 @@ for msg in st.session_state.messages:
         </div>
     """, unsafe_allow_html=True)
 
-# --- 输入框 ---
-with st.container():
-    # 为了保持纯粹的 Y2K 体验，使用 Chat Input 并 styling 包装
-    user_input = st.chat_input("说点什么吧...")
-    
-# --- 侧边栏：系统控制区 ---
+# --- 6. 用户交互逻辑 ---
 with st.sidebar:
     st.markdown("### 🛠️ 系统控制")
     if st.button("重启大脑 (Clear Cache)"):
         st.session_state.messages = []
         st.session_state.initial_popup_seen = False
         st.rerun()
-    
     st.markdown("---")
     st.write("螺线管卡BUG了")
-    
-# --- 5. 逻辑实现与界面渲染 ---
+
+user_input = st.chat_input("说点什么吧...")
 
 if user_input:
-    # 存储用户输入
     st.session_state.messages.append({"role": "user", "content": user_input})
     
     with st.spinner("螺线管输入中..."):
         try:
-            # 调用 DeepSeek API
             response = client.chat.completions.create(
-                model="deepseek-chat",  # 或者用 deepseek-reasoner 如果你想让她更“深思熟虑”
+                model="deepseek-chat", 
                 messages=[
                     {"role": "system", "content": PERSONAL_VIBE},
-                    *st.session_state.messages # 把之前的聊天历史也带上，让她有记忆
+                    *st.session_state.messages 
                 ],
                 stream=False
             )
             kelly_reply = response.choices[0].message.content
         except Exception as e:
             error_msg = str(e).lower()
-            
             if "content_filter" in error_msg or "sensitive" in error_msg:
                 kelly_reply = "...停停停大姐你要不看看你在说什么Σ(ﾟДﾟ)"
             elif "429" in error_msg:
@@ -257,6 +236,6 @@ if user_input:
                 kelly_reply = "啊...说太多话了没token烧了(;・∀・)。。可以麻烦你去告诉碳基的我给我充钱吗...? 或者你想给我捐款也可以()"
             else:
                 kelly_reply = f"...诶。发生了某种不可名状的错误。大概是世界线崩塌了。错误信息：{error_msg[:20]}..."
-    # 将回复存入对话并刷新
+                
     st.session_state.messages.append({"role": "assistant", "content": kelly_reply})
     st.rerun()
