@@ -91,13 +91,36 @@ st.markdown(f"""
 
 # --- 3. 生成背景上的随机小元素 ---
 background_symbols = ["✧", "✦", "★", "☆", ":3", "♪", "くコ:彡"]
-for _ in range(15):
-    size = random.randint(16, 36) 
-    top_pos = random.randint(5, 95)
-    left_pos = random.randint(5, 95)
+
+# 我们把 15 个符号均匀分布在屏幕的不同区域
+for i in range(15):
+    # 1. 计算基础位置（让它们大致均匀分布）
+    # 这样能保证符号不会全部挤在中间或者某一个角
+    base_top = (i % 5) * 20  # 分成5行
+    base_left = (i // 5) * 33 # 分成3列
+    
+    # 2. 在基础位置上加入随机偏移，增加灵动感
+    top_pos = base_top + random.randint(0, 15)
+    left_pos = base_left + random.randint(0, 20)
+    
+    # 3. 随机大小和旋转角度（旋转会让背景更生动）
+    size = random.randint(16, 36)
+    angle = random.randint(-20, 20) # 歪一点点更可爱
     symbol = random.choice(background_symbols)
-    st.markdown(f'<div class="background-element" style="top: {top_pos}%; left: {left_pos}%; font-size: {size}px;">{symbol}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="background-element" style="top: {top_pos}%; left: {left_pos}%;">{symbol}</div>', unsafe_allow_html=True)
+    
+    # 4. 只用一个 st.markdown 渲染，并加入透明度微调
+    st.markdown(
+        f'''
+        <div class="background-element" 
+             style="top: {top_pos}%; 
+                    left: {left_pos}%; 
+                    font-size: {size}px; 
+                    transform: rotate({angle}deg);">
+            {symbol}
+        </div>
+        ''', 
+        unsafe_allow_html=True
+    )
 
 # --- 4. 注入灵魂 (VERBATIM Character Preset) ---
 PERSONAL_VIBE = """
