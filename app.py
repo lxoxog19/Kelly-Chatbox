@@ -166,7 +166,7 @@ You're smart but not pretentious, confident but not arrogant, independent but ge
 if not st.session_state.initial_popup_seen:
     chosen_init = random.choice([
         "硅基螺线管代劳中_(:3」∠)_",
-        "This is no Silicon Valley. It's Silicon Kelly here :3",
+        "Not Silicon Valley. Just Silicon Kelly :3",
         "你好What's upこんにちﾜｯｻﾌﾟ(^_^)/"
     ])
     border_color = random.choice(random_colors)
