@@ -2,6 +2,13 @@ import streamlit as st
 from openai import OpenAI
 import random
 
+api_key = st.secrets.get("DEEPSEEK_API_KEY")
+
+if not api_key:
+    st.error("🔑 Error: 找不到 API Key！")
+    st.info("请检查：1. Secrets 里的变量名是否叫 DEEPSEEK_API_KEY； 2. 是否点了 Save 按钮。")
+    st.stop()  # 停止后续运行，避免看到一堆报错红字
+    
 client = OpenAI(
     api_key=st.secrets["DEEPSEEK_API_KEY"], 
     base_url="https://api.deepseek.com"
