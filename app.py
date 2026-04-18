@@ -211,7 +211,7 @@ if user_input:
     with st.spinner("螺线管输入中..."):
         try:
             response = client.chat.completions.create(
-                model="deepseek-chat",
+                model="deepseek-reasoner",
                 messages=[
                     {"role": "system", "content": PERSONAL_VIBE},
                     *st.session_state.messages
